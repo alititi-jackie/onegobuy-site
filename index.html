@@ -129,7 +129,7 @@ button:active { transform: translateY(0); }
 
 <!-- 顶部导航 -->
 <nav>
-  <div class="logo" onclick="homeRefresh()" title="Click to refresh and return to home">OneGoBuy.com</div>
+  <div class="logo" onclick="goToHome()" title="Go to OneGoBuy home">OneGoBuy.com</div>
   <div class="nav-links">
     <a class="return-home" href="https://OpenAA.com" target="_blank">返回 OpenAA 首页</a>
     <a class="return-home" href="https://jozl.com" target="_blank">Jozl</a>
@@ -232,9 +232,9 @@ button:active { transform: translateY(0); }
 </div>
 
 <script>
-// 主页刷新功能
-function homeRefresh(){
-  location.reload();
+// 跳转到 OneGoBuy 首页
+function goToHome(){
+  window.location.href = 'https://OneGoBuy.com';
 }
 
 // 按 Enter 键提交搜索

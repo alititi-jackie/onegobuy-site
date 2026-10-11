@@ -58,9 +58,16 @@ body { margin:0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Rob
 html { scroll-behavior: smooth; }
 nav { padding: 20px 40px; font-size:22px; color:#22c55e; font-weight:bold; display:flex; justify-content:space-between; align-items:center; position: sticky; top: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.3);}
 nav a { cursor: pointer; }
-nav .logo { cursor: pointer; transition: all 0.3s ease; }
+nav .logo { cursor: pointer; transition: all 0.3s ease; display:flex; align-items:center; gap:10px; min-width:0; }
 nav .logo:hover { color: #16a34a; text-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
-.nav-links { display: flex; gap: 15px; }
+.brand-mark { width:34px; height:34px; flex:0 0 34px; display:block; object-fit:contain; padding:3px; border-radius:50%; background:#fff; }
+.nav-links { display: flex; align-items:center; gap:10px; flex-shrink:0; }
+.nav-icon { width:40px; height:40px; padding:0; display:inline-flex; align-items:center; justify-content:center; border:1px solid rgba(203,213,225,.24); border-radius:10px; background:rgba(255,255,255,.04); color:#e2e8f0; text-decoration:none; cursor:pointer; transition:background .2s ease,border-color .2s ease,color .2s ease; }
+.nav-icon:hover { background:rgba(255,255,255,.12); border-color:rgba(203,213,225,.5); color:#fff; transform:none; box-shadow:none; }
+.nav-icon svg { width:20px; height:20px; display:block; }
+.nav-icon:focus-visible { outline:2px solid #22c55e; outline-offset:3px; }
+.share-toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:1000; padding:10px 16px; border-radius:9px; background:#e2e8f0; color:#0f172a; font-size:14px; font-weight:500; box-shadow:0 6px 22px rgba(0,0,0,.28); opacity:0; pointer-events:none; transition:opacity .2s ease; }
+.share-toast.visible { opacity:1; }
 .hero { text-align:center; padding:60px 20px; animation: fadeIn 0.6s ease-in; }
 .hero h1 { font-size: 2.5em; margin-bottom: 10px; }
 .hero p { font-size: 1.1em; color: #cbd5e1; margin-bottom: 20px; }
@@ -101,9 +108,10 @@ button:active { transform: translateY(0); }
 }
 
 @media (max-width: 768px) {
-  nav { padding: 15px 20px; flex-wrap: wrap; }
-  nav .logo { font-size: 18px; }
-  .nav-links { flex-wrap: wrap; gap: 8px; width: 100%; }
+  nav { padding: 15px 20px; flex-wrap: nowrap; gap:12px; }
+  nav .logo { font-size: 18px; gap:8px; }
+  .brand-mark { width:30px; height:30px; flex-basis:30px; }
+  .nav-links { flex-wrap: nowrap; gap:7px; width:auto; }
   .hero h1 { font-size: 1.8em; }
   input { width: 90%; padding: 10px 14px; }
   .section { padding: 30px 15px; }
@@ -113,7 +121,12 @@ button:active { transform: translateY(0); }
 }
 
 @media (max-width: 480px) {
-  nav { padding: 12px 15px; }
+  nav { padding: 12px 12px; gap:8px; }
+  nav .logo { font-size:16px; gap:7px; }
+  .brand-mark { width:28px; height:28px; flex-basis:28px; padding:2px; }
+  .nav-icon { width:36px; height:36px; border-radius:9px; }
+  .nav-icon svg { width:18px; height:18px; }
+  .nav-links { gap:6px; }
   .hero { padding: 30px 15px; }
   .hero h1 { font-size: 1.5em; }
   .hero p { font-size: 0.95em; }
@@ -129,12 +142,30 @@ button:active { transform: translateY(0); }
 
 <!-- 顶部导航 -->
 <nav>
-  <div class="logo" onclick="goToHome()" title="Go to OneGoBuy home">OneGoBuy.com</div>
-  <div class="nav-links">
-    <a class="return-home" href="https://OpenAA.com" target="_blank">返回 OpenAA 首页</a>
-    <a class="return-home" href="https://jozl.com" target="_blank">Jozl</a>
+  <div class="logo" onclick="goToHome()" title="Go to OneGoBuy home">
+    <img class="brand-mark" src="/logo.png" alt="OpenAA logo" width="34" height="34">
+    <span>OneGoBuy.com</span>
+  </div>
+  <div class="nav-links" aria-label="快捷操作">
+    <a class="nav-icon" href="https://go.openaa.com/" target="_blank" rel="noopener noreferrer" aria-label="返回 OpenAA 导航" title="返回 OpenAA 导航">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3.5" y="3.5" width="6" height="6" rx="1.2"></rect>
+        <rect x="14.5" y="3.5" width="6" height="6" rx="1.2"></rect>
+        <rect x="3.5" y="14.5" width="6" height="6" rx="1.2"></rect>
+        <rect x="14.5" y="14.5" width="6" height="6" rx="1.2"></rect>
+      </svg>
+    </a>
+    <button class="nav-icon" type="button" onclick="shareCurrentPage()" aria-label="分享当前网页" title="分享当前网页">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="18" cy="5" r="2.5"></circle>
+        <circle cx="6" cy="12" r="2.5"></circle>
+        <circle cx="18" cy="19" r="2.5"></circle>
+        <path d="M8.2 10.8 15.8 6.2M8.2 13.2l7.6 4.6"></path>
+      </svg>
+    </button>
   </div>
 </nav>
+<div id="shareToast" class="share-toast" role="status" aria-live="polite"></div>
 
 <!-- Hero / AI推荐 -->
 <section class="hero">
@@ -236,6 +267,54 @@ button:active { transform: translateY(0); }
 // 跳转到 OneGoBuy 首页
 function goToHome(){
   window.location.href = 'https://OneGoBuy.com';
+}
+
+// 分享当前页面：优先使用系统分享，不支持时复制网页地址
+let shareToastTimer;
+function showShareToast(message) {
+  const toast = document.getElementById('shareToast');
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add('visible');
+  window.clearTimeout(shareToastTimer);
+  shareToastTimer = window.setTimeout(() => toast.classList.remove('visible'), 2200);
+}
+
+async function shareCurrentPage() {
+  const shareData = {
+    title: document.title,
+    text: 'OneGoBuy 一站式购物导航',
+    url: window.location.href
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+      return;
+    } catch (error) {
+      if (error && error.name === 'AbortError') return;
+    }
+  }
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(window.location.href);
+    } else {
+      const temp = document.createElement('textarea');
+      temp.value = window.location.href;
+      temp.setAttribute('readonly', '');
+      temp.style.position = 'fixed';
+      temp.style.opacity = '0';
+      document.body.appendChild(temp);
+      temp.select();
+      const copied = document.execCommand('copy');
+      temp.remove();
+      if (!copied) throw new Error('Copy command failed');
+    }
+    showShareToast('网页链接已复制');
+  } catch (error) {
+    showShareToast('分享失败，请手动复制网页地址');
+  }
 }
 
 // 按 Enter 键提交搜索
